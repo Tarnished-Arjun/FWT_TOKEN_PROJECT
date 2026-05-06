@@ -36,11 +36,11 @@ def signup(
     )
 
     db.add(user)
-
     db.commit()
-
     db.refresh(user)
 
     return {
         "message": "User registered successfully"
     }
+
+
