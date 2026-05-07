@@ -1,6 +1,14 @@
 from passlib.context import CryptContext
 
-from jose import jwt
+from jose import (
+    jwt,
+    JWTError
+)
+
+from fastapi import (
+    HTTPException,
+    status
+)
 
 from datetime import (
     datetime,
@@ -50,3 +58,36 @@ def create_access_token(data: dict):
     )
 
     return encoded_jwt
+
+def verify_token(token: str):
+
+    try:
+
+        payload = jwt.decode(
+            token,
+            settings.SECRET_KEY,
+            algorithms=[settings.ALGORITHM]
+        )
+
+        email = payload.get("sub")
+
+        role = payload.get("role")
+
+        if email is None:
+
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid token"
+            )
+
+        return {
+            "email": email,
+            "role": role
+        }
+
+    except JWTError:
+
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token"
+        )

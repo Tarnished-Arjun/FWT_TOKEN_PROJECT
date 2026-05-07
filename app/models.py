@@ -30,3 +30,8 @@ class User(Base):
     password = Column(
         String(255)
     )
+
+    role = Column(
+        String(50),
+        default="user"
+    )

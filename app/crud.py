@@ -2,7 +2,10 @@ from sqlalchemy.orm import Session
 
 from fastapi import HTTPException
 
-from app import models, auth
+from app import (
+    models,
+    auth
+)
 
 
 def create_user(
@@ -39,7 +42,8 @@ def create_user(
     user = models.User(
         username=data.username,
         email=data.email,
-        password=hashed_password
+        password=hashed_password,
+        role="user"
     )
 
     db.add(user)
@@ -79,7 +83,8 @@ def login_user(
 
     access_token = auth.create_access_token(
         data={
-            "sub": user.email
+            "sub": user.email,
+            "role": user.role
         }
     )
 
